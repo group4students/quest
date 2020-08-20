@@ -12,7 +12,7 @@
       width:138px;
     }
     .smaller {
-      width:124;  
+      width:124px;  
       }
     }
   </style>
@@ -73,8 +73,6 @@ bottom1 = createDraggable("bottom-1", 0, 2 * verticalShift, snapTargets[6], afte
 bottom2 = createDraggable("bottom-2", horizontalShift, 2 * verticalShift, snapTargets[1], afterSnapLocations[1])
 bottom3 = createDraggable("bottom-3", 2 * horizontalShift, 2 * verticalShift, snapTargets[8], afterSnapLocations[8])
 
-allStones = [top1, top2, top3, mid1, mid2, mid3, bottom1, bottom2, bottom3]
-
 function createDraggable(elemId, left, top, snapTarget, afterSnapLocation) {
   draggable = new PlainDraggable(document.getElementById(elemId), {
     left: left,
@@ -88,8 +86,9 @@ function createDraggable(elemId, left, top, snapTarget, afterSnapLocation) {
   });
   draggable.onMove = function(newPosition) {
     if (newPosition.left == afterSnapLocation.x && newPosition.right == afterSnapLocation.right) {
+        console.log("%s newPosition (%s, %s), afterSnapLocation(%s, %s)", elemId, newPosition.left, newPosition.top, afterSnapLocation.x, afterSnapLocation.y);
         playSnapSound();
-        verifyComplete();
+        verifyComplete(elemId);
         this.disabled = true;
     }
   };
@@ -100,19 +99,11 @@ function playSnapSound() {
   new Audio("sound.wav").play();
 }
 
-function verifyComplete() {
-  var complete = true;
-  for (i = 0; i < 9; i++) {
-    var stone = allStones[i];
-    var completedLocation = afterSnapLocations[i];
-    complete &= stone.top == completedLocation.y && stone.left == completedLocation.x;
-    if (complete == false) {
-      console.log("failed at i: ", i)
-      break;
-    }
-  }
-  console.log(complete, "what happened")
-  if (complete) {
+completedStones = new Set()
+
+function verifyComplete(elemId) {
+  completedStones.add(elemId)
+  if (completedStones.size == 9) {
     const instance = basicLightbox.create(`
       <img src="swami_applause.jpeg"/>
     `)
@@ -121,7 +112,6 @@ function verifyComplete() {
     new Audio("applause.wav").play();
   }
 }
-
 
 </script>
 </div>
