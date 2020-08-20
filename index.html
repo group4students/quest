@@ -1,0 +1,131 @@
+<html><head>
+  <script src="plain-draggable.min.js"></script>
+  <style>
+    .stone {
+      width:130px;
+      float:left;
+    }
+    .biggest {
+      width:144px;
+    }
+    .bigger {
+      width:138px;
+    }
+    .smaller {
+      width:124;  
+      }
+    }
+  </style>
+  <link rel="stylesheet" href="./basicLightbox.min.css" />
+  <script src="./basicLightbox.min.js"></script>
+</head>
+
+<body>
+
+<div id="container" style="width:1400px;height:550px;" >
+  <img src="ring.png" style="float:right;width:800px;" >
+  <img class="stone biggest" id="top-1" src="5.png">
+  <img class="stone" id="top-2" src="8.png">
+  <img class="stone" id="top-3" src="4.png">
+  <img class="stone" id="mid-1" src="3.png">
+  <img class="stone" id="mid-2" src="1.png">
+  <img class="stone" id="mid-3" src="6.png">
+  <img class="stone bigger" id="bottom-1" src="7.png">
+  <img class="stone smaller" id="bottom-2" src="2.png">
+  <img class="stone" id="bottom-3" src="9.png">
+<script>
+
+snapTargets = [
+  {x: 795, y: 75},
+  {x: 933, y: 75},
+  {x: 1065, y: 70},
+  {x: 790, y: 200},
+  {x: 920, y: 197},
+  {x: 1065, y: 205},
+  {x: 783, y: 335},
+  {x: 928, y: 345},
+  {x: 1062, y: 340},
+]
+afterSnapLocations = [
+  {x: 803, y: 83},
+  {x: 941, y: 83},
+  {x: 1073, y: 78},
+  {x: 798, y: 208},
+  {x: 928, y: 205},
+  {x: 1073, y: 213},
+  {x: 791, y: 343},
+  {x: 936, y: 350},
+  {x: 1070, y: 348},
+]
+
+horizontalShift = 160
+verticalShift = 200
+
+top1 = createDraggable("top-1", 0, 0, snapTargets[4], afterSnapLocations[4])
+top2 = createDraggable("top-2", horizontalShift, 0, snapTargets[7], afterSnapLocations[7])
+top3 = createDraggable("top-3", 2 * horizontalShift, 0, snapTargets[3], afterSnapLocations[3])
+
+mid1 = createDraggable("mid-1", 0, verticalShift, snapTargets[2], afterSnapLocations[2])
+mid2 = createDraggable("mid-2", horizontalShift, verticalShift, snapTargets[0], afterSnapLocations[0])
+mid3 = createDraggable("mid-3", 2 * horizontalShift, verticalShift, snapTargets[5], afterSnapLocations[5])
+
+bottom1 = createDraggable("bottom-1", 0, 2 * verticalShift, snapTargets[6], afterSnapLocations[6])
+bottom2 = createDraggable("bottom-2", horizontalShift, 2 * verticalShift, snapTargets[1], afterSnapLocations[1])
+bottom3 = createDraggable("bottom-3", 2 * horizontalShift, 2 * verticalShift, snapTargets[8], afterSnapLocations[8])
+
+allStones = [top1, top2, top3, mid1, mid2, mid3, bottom1, bottom2, bottom3]
+
+function createDraggable(elemId, left, top, snapTarget, afterSnapLocation) {
+  draggable = new PlainDraggable(document.getElementById(elemId), {
+    left: left,
+    top: top,
+    snap: {
+      targets: [
+        snapTarget
+      ], 
+      gravity: 65,
+    }
+  });
+  draggable.onMove = function(newPosition) {
+    if (newPosition.left == afterSnapLocation.x && newPosition.right == afterSnapLocation.right) {
+        playSnapSound();
+        verifyComplete();
+        this.disabled = true;
+    }
+  };
+  return draggable;
+}
+
+function playSnapSound() {
+  new Audio("sound.wav").play();
+}
+
+function verifyComplete() {
+  var complete = true;
+  for (i = 0; i < 9; i++) {
+    var stone = allStones[i];
+    var completedLocation = afterSnapLocations[i];
+    complete &= stone.top == completedLocation.y && stone.left == completedLocation.x;
+    if (complete == false) {
+      console.log("failed at i: ", i)
+      break;
+    }
+  }
+  console.log(complete, "what happened")
+  if (complete) {
+    const instance = basicLightbox.create(`
+      <img src="swami_applause.jpeg"/>
+    `)
+    instance.show();
+
+    new Audio("applause.wav").play();
+  }
+}
+
+
+</script>
+</div>
+
+
+</body>
+</html>
