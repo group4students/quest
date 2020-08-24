@@ -54,7 +54,7 @@ afterSnapLocations = [
   {x: 928, y: 205},
   {x: 1073, y: 213},
   {x: 791, y: 343},
-  {x: 936, y: 350},
+  {x: 936, y: 353},
   {x: 1070, y: 348},
 ]
 
@@ -85,8 +85,9 @@ function createDraggable(elemId, left, top, snapTarget, afterSnapLocation) {
     }
   });
   draggable.onMove = function(newPosition) {
-    if (newPosition.left == afterSnapLocation.x && newPosition.right == afterSnapLocation.y) {
-        console.log("%s newPosition (%s, %s), afterSnapLocation(%s, %s)", elemId, newPosition.left, newPosition.top, afterSnapLocation.x, afterSnapLocation.y);
+    console.log("%s newPosition (%s, %s), afterSnapLocation(%s, %s)", elemId, newPosition.left, newPosition.top, afterSnapLocation.x, afterSnapLocation.y);
+    if (newPosition.left == afterSnapLocation.x && newPosition.top == afterSnapLocation.y) {
+        console.log("fixed - %s newPosition (%s, %s), afterSnapLocation(%s, %s)", elemId, newPosition.left, newPosition.top, afterSnapLocation.x, afterSnapLocation.y);
         playSnapSound();
         verifyComplete(elemId);
         this.disabled = true;
