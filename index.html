@@ -85,7 +85,7 @@ function createDraggable(elemId, left, top, snapTarget, afterSnapLocation) {
     }
   });
   draggable.onMove = function(newPosition) {
-    if (newPosition.left == afterSnapLocation.x && newPosition.right == afterSnapLocation.right) {
+    if (newPosition.left == afterSnapLocation.x && newPosition.right == afterSnapLocation.y) {
         console.log("%s newPosition (%s, %s), afterSnapLocation(%s, %s)", elemId, newPosition.left, newPosition.top, afterSnapLocation.x, afterSnapLocation.y);
         playSnapSound();
         verifyComplete(elemId);
